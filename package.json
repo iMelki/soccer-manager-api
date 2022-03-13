@@ -26,7 +26,8 @@
     "mig:run": "npm run build && npm run typeorm migration:run",
     "mig:rev": "npm run build && npm run typeorm migration:revert",
     "schema:sync": "npm run typeorm schema:sync",
-    "schema:drop": "npm run typeorm schema:drop"
+    "schema:drop": "npm run typeorm schema:drop",
+    "stam": "stam stam"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^1.6.1",
