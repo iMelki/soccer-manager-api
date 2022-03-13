@@ -2,8 +2,9 @@ import { Module } from '@nestjs/common';
 import { Routes, RouterModule } from 'nest-router';
 
 import AuthModule from './auth/auth.module';
-import TeamsModule from './teams/teams.module';
 import UsersModule from './users/users.module';
+import TeamsModule from './teams/teams.module';
+import PlayersModule from './players/players.module';
 
 const routes: Routes = [
   {
@@ -12,6 +13,7 @@ const routes: Routes = [
       { path: '/auth', module: AuthModule },
       { path: '/users', module: UsersModule },
       { path: '/teams', module: TeamsModule },
+      { path: '/players', module: PlayersModule },
     ],
   },
 ];
@@ -22,6 +24,7 @@ const routes: Routes = [
     AuthModule,
     UsersModule,
     TeamsModule,
+    PlayersModule,
   ],
 })
 export default class V1Module {}

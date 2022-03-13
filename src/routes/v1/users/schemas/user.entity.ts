@@ -3,10 +3,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   Index,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
 import { RolesEnum } from '@decorators/roles.decorator';
+import TeamEntity from '@v1/teams/schemas/team.entity';
 
 @Entity('users')
 export default class UserEntity {
@@ -27,7 +30,11 @@ export default class UserEntity {
   @Column()
   readonly verified: boolean = true;
 
-  @ApiProperty({ type: String, default: RolesEnum.user, enum: RolesEnum })
+  // @ApiProperty({ type: String, default: RolesEnum.user, enum: RolesEnum })
   @Column({ type: 'enum', enum: RolesEnum, default: RolesEnum.user })
   readonly role: RolesEnum = RolesEnum.user;
+
+  @OneToOne(() => TeamEntity, (team) => team.user, { cascade: true })
+  @JoinColumn()
+  readonly team: TeamEntity | undefined;
 }
