@@ -190,13 +190,14 @@ export default class AuthController {
     });
 
     await this.usersService.update(id, {
-      ...user,
-      team, // : { ...team, players },
+      team,
       verified: true,
     });
 
     return ResponseUtils.success('auth', {
-      message: 'Success! please, no need to verify your email',
+      // message: 'Success! please, verify your email',
+      message: `Thanks for registering! \n
+      Please login with your credentials, to see your newly created TEAM :)`,
     });
   }
 

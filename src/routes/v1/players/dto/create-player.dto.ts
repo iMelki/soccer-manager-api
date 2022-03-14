@@ -1,4 +1,4 @@
-import { ApiProperty, ApiPropertyOptional, PartialType } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   IsNumber, IsOptional, IsString, MaxLength,
 } from 'class-validator';
@@ -14,7 +14,7 @@ export default class CreatePlayerDto {
     @ApiProperty({ type: String })
     @MaxLength(64)
     @IsString()
-    readonly first: string = '';
+    readonly first?: string = '';
 
     @ApiProperty({ type: String })
     @MaxLength(64)
