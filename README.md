@@ -1,4 +1,4 @@
-# Nest.js boilerplate
+# Soccer Manager REST API
 
 [![onix](https://img.shields.io/badge/onix-systems-blue.svg)](https://onix-systems.com/)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
@@ -12,7 +12,7 @@
 [![Organization stars](https://img.shields.io/github/stars/Onix-Systems?label=Onix%20Stars&style=social)](https://github.com/Onix-Systems)
 [![Travis build passing](https://api.travis-ci.org/Onix-Systems/nest-js-boilerplate.svg?branch=master)](https://github.com/Onix-Systems/nest-js-boilerplate)
 
-> Node.js Nest.js API. Supports MongoDB, Mysql, Redis
+> Node.js Nest.js API. Using Postgres & Redis
 
 ## Description
 This generator will help you to build your own Nest.js Mongodb/MySQL API using TypeScript 4
@@ -22,7 +22,6 @@ This generator will help you to build your own Nest.js Mongodb/MySQL API using T
 - Using Eslint followed [Airbnb JavaScript Style Guide](https://github.com/airbnb/javascript)
 - Husky
 - Commitizen
-- MIT license and Code of conduct
 - Docker
 - Prettier
 
@@ -32,9 +31,8 @@ This generator will help you to build your own Nest.js Mongodb/MySQL API using T
 - jwt authentication
 - passport google 2.0 strategy
 ##### Session Storage:
-- MongoDB
+- PostgreSQL
 - Redis
-- MySQL
 ##### Integration testing
 - mocha
 - chai
@@ -44,16 +42,16 @@ This generator will help you to build your own Nest.js Mongodb/MySQL API using T
 
 - node >= 12
 - npm >= 6
-- mongodb >= 4.0
+- postgres >= 13
 - typescript >= 3.0
 
 ## Installation
 
-First, install [Yeoman](http://yeoman.io) and generator-nest-js-boilerplate using [npm](https://www.npmjs.com/) (we assume you have pre-installed [node.js](https://nodejs.org/)).
+First, install [node.js](https://nodejs.org/).
+Then install app dependencies, using:
 
 ```bash
-npm install -g yo
-npm install -g generator-nest-js-boilerplate
+npm install 
 ```
 
 Then generate your new project:
@@ -62,26 +60,45 @@ Then generate your new project:
 yo nest-js-boilerplate
 ```
 
-App Skeleton
+App Skeleton:
 
 ```
 ├── src
-│├── components
+│├── routes
 ││├── app
 │││   └── ...
-││├── auth
+││├── v1
+│││├── auth
+││││   └── ...
+│││├── users
+││││   └── ...
+│││├── teams
+││││   └── ...
+│││├── players
+││││   └── ...
+│││└── ...
+│├── data
+││├── migrations
 │││   └── ...
-││└── users
+││└── seed
 ││    └── ...
-│├── dto
-││└── ...
+│├── interfaces
+││   └── ...
+│├── interceptors
+││   └── ...
+│├── decorators
+││   └── ...
+│├── constants
+││   └── ...
+│├── config
+││   └── ...
 │├── filters
-││└── ...
+││   └── ...
 │├── guards
-││└── ...
-│├── main.ts
-│└── pipes
-│    └── ...
+││   └── ...
+│├── utils
+││   └── ...
+│└── main.ts
 ├── docker-compose.yml
 ├── index.js
 ├── nest-cli.json
@@ -122,9 +139,9 @@ The developer mode will watch your changes then will transpile the TypeScript co
 * [Install Docker](https://docs.docker.com/get-docker/)
 * [Install docker-compose](https://docs.docker.com/compose/install/)
 
-To run your app in docker containers choose "Yes" when the generator asks you about docker.
+To run your app in docker containers :
  
-#### Now, lift up your app in docker 
+#### Lift up your app in docker 
 ``` 
   docker-compose up 
 ```
