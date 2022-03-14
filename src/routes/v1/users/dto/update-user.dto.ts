@@ -10,11 +10,11 @@ export default class UpdateUserDto extends PartialType(SignUpDto) {
   })
   @IsOptional()
   @IsBoolean()
-  readonly verified: boolean = true;
+  readonly verified?: boolean = true;
 
   @ApiPropertyOptional({
     type: TeamEntity,
   })
   @IsOptional()
-  readonly team: TeamEntity | undefined;
+  readonly team?: TeamEntity | undefined;
 }

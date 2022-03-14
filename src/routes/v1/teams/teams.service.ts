@@ -71,7 +71,6 @@ export default class TeamsService {
     const players = await Promise.all(playerDtos.map(async (dto) => {
       return this.playersService.create(dto);
     }));
-    console.log(players);
 
     return this.teamsRepository.create(new CreateTeamDto({
       ...createTeamDto,
