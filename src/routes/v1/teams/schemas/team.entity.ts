@@ -31,7 +31,7 @@ export default class TeamEntity {
 
     @ApiProperty({ type: Number })
     @Column()
-    readonly budget: number = 5000000;
+    readonly budget?: number = 5000000;
 
     @OneToOne(() => UserEntity, (user) => user.team, { onDelete: 'CASCADE' })
     readonly user: UserEntity | undefined;

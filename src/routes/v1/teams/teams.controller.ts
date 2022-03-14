@@ -17,8 +17,8 @@ import {
 
 import TeamEntity from './schemas/team.entity';
 import TeamsService from './teams.service';
-import { CreateTeamDto } from './dto/create-team.dto';
-import { UpdateTeamDto } from './dto/update-team.dto';
+import CreateTeamDto from './dto/create-team.dto';
+import UpdateTeamDto from './dto/update-team.dto';
 // import Serialize from '@decorators/serialization.decorator';
 
 @ApiTags('Teams')
