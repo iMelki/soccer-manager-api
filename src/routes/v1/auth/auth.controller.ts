@@ -33,7 +33,13 @@ import { Request as ExpressRequest } from 'express';
 import { MailerService } from '@nestjs-modules/mailer';
 
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
+
 import UsersService from '@v1/users/users.service';
+import TeamsService from '@v1/teams/teams.service';
+import PlayersService from '@v1/players/players.service';
+import PlayerEntity from '@v1/players/entities/player.entity';
+import CreateTeamDto from '@v1/teams/dto/create-team.dto';
+
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import RolesGuard from '@guards/roles.guard';
 import UserEntity from '@v1/users/schemas/user.entity';
@@ -49,6 +55,7 @@ import SignInDto from './dto/sign-in.dto';
 import SignUpDto from './dto/sign-up.dto';
 import JwtTokensDto from './dto/jwt-tokens.dto';
 import ResponseUtils from '../../../utils/response.utils';
+// import MailingUtils from '../../../utils/mailing.utils';
 
 @ApiTags('Auth')
 @UseInterceptors(WrapResponseInterceptor)
@@ -59,6 +66,8 @@ export default class AuthController {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
+    private readonly teamsService: TeamsService,
+    private readonly playersService: PlayersService,
     private readonly mailerService: MailerService,
   ) {}
 
@@ -112,7 +121,6 @@ export default class AuthController {
   async signIn(
     @Request() req: ExpressRequest,
   ): Promise<SuccessResponseInterface | never> {
-    console.log(`SIGN INNNNNNN !!!!!`);
     const { password, ...user } = req.user as UserEntity;
 
     return ResponseUtils.success('tokens', await this.authService.login(user));
@@ -165,23 +173,28 @@ export default class AuthController {
   @HttpCode(HttpStatus.CREATED)
   @Post('sign-up')
   async signUp(@Body() user: SignUpDto): Promise<any> {
-    console.log(`AAAAHHHHH`);
     // console.log('./verify-password');
-    const { id, email } = await this.usersService.create(user);
+    const {
+      id,
+      // , email,
+    } = await this.usersService.create(user);
+    // console.log(`${id}\n ${email}`);
+    // TODO: send verification email:
     // const token = this.authService.createVerifyToken(id);
-    // await this.mailerService.sendMail({
-    //   to: email,
-    //   from: process.env.MAILER_FROM_EMAIL,
-    //   subject: authConstants.mailer.verifyEmail.subject,
-    //   template: `${process.cwd()}/src/templates/verify-password`,
-    //   context: {
-    //     token,
-    //     email,
-    //     host: process.env.SERVER_HOST,
-    //   },
-    // });
+    // MailingUtils.sendVerificationEmail(email, token);
 
-    console.log(`${id}\n ${email}`);
+    // Create a new TEAM
+    const team = await this.teamsService.create({
+      name: `NEW TEAM ${id}`,
+      country: 'USA',
+    });
+
+    await this.usersService.update(id, {
+      ...user,
+      team, // : { ...team, players },
+      verified: true,
+    });
+
     return ResponseUtils.success('auth', {
       message: 'Success! please, no need to verify your email',
     });
@@ -230,8 +243,7 @@ export default class AuthController {
       throw new ForbiddenException('Incorrect token');
     }
 
-    const oldRefreshToken: string | null =
-      await this.authService.getRefreshTokenByEmail(decodedUser.email);
+    const oldRefreshToken: string | null = await this.authService.getRefreshTokenByEmail(decodedUser.email);
 
     // if the old refresh token is not equal to request refresh token then this user is unauthorized
     if (!oldRefreshToken || oldRefreshToken !== refreshTokenDto.refreshToken) {
@@ -281,7 +293,10 @@ export default class AuthController {
 
     return ResponseUtils.success(
       'users',
-      await this.usersService.update(foundUser.id, { verified: true }),
+      await this.usersService.update(foundUser.id, {
+        verified: true,
+        team: undefined,
+      }),
     );
   }
 

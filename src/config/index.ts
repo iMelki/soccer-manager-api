@@ -1,9 +1,11 @@
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import dbConfig from './database';
+// import entitiesConfig from './entitiesConfig';
 
 interface iConfig {
   port: number;
   database: PostgresConnectionOptions;
+  // entities: {},
   keys: {
     privateKey: string;
     publicKey: string;
@@ -21,4 +23,5 @@ export default (): Partial<iConfig> => ({
       : '',
   },
   database: dbConfig,
+  // entities: entitiesConfig,
 });

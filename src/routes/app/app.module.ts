@@ -19,37 +19,37 @@ console.log(`configuration: \n ${configuration.toString()}`);
 
 @Module({
   imports: [
-    // ConfigModule.forRoot({
-    //   isGlobal: true,
-    // }),
-    // TypeOrmModule.forRoot({
-    //   type: 'postgres',
-    //   host: process.env.POSTGRES_HOST || 'postgresql_database',
-    //   port: process.env.POSTGRES_PORT as unknown as number,
-    //   database: process.env.POSTGRES_DB,
-    //   username: process.env.POSTGRES_USER,
-    //   password: process.env.POSTGRES_PASSWORD,
-    //   entities: ['dist/**/*.entity{.ts,.js}'],
-    //   synchronize: true,
-    // }),
-    /// //////////////
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration],
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions,
-      inject: [ConfigService],
-      // type: 'postgres',
-      // host: process.env.POSTGRESQL_HOST || 'postgres',
-      // port: (process.env.POSTGRESQL_PORT as unknown) as number,
-      // database: process.env.POSTGRESQL_DB,
-      // username: process.env.POSTGRESQL_ROOT_USER,
-      // password: process.env.POSTGRESQL_PASSWORD,
-      // entities: ['dist/**/*.entity{.ts,.js}'],
-      // synchronize: true,
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: process.env.POSTGRES_HOST || 'postgresql_database',
+      port: process.env.POSTGRES_PORT as unknown as number,
+      database: process.env.POSTGRES_DB,
+      username: process.env.POSTGRES_USER,
+      password: process.env.POSTGRES_PASSWORD,
+      entities: ['dist/**/*.entity{.ts,.js}'],
+      synchronize: true,
     }),
+    /// //////////////
+    // ConfigModule.forRoot({
+    //   isGlobal: true,
+    //   load: [configuration],
+    // }),
+    // TypeOrmModule.forRootAsync({
+    //   imports: [ConfigModule],
+    //   useFactory: (configService: ConfigService) => configService.get('database') as TypeOrmModuleOptions,
+    //   inject: [ConfigService],
+    //   // type: 'postgres',
+    //   // host: process.env.POSTGRESQL_HOST || 'postgres',
+    //   // port: (process.env.POSTGRESQL_PORT as unknown) as number,
+    //   // database: process.env.POSTGRESQL_DB,
+    //   // username: process.env.POSTGRESQL_ROOT_USER,
+    //   // password: process.env.POSTGRESQL_PASSWORD,
+    //   // entities: ['dist/**/*.entity{.ts,.js}'],
+    //   // synchronize: true,
+    // }),
     RedisModule.register({
       url: process.env.REDIS_URL,
       onClientReady: async (client): Promise<void> => {
