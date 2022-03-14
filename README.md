@@ -30,6 +30,8 @@ This generator will help you to build your own Nest.js Mongodb/MySQL API using T
 - passport local strategy
 - jwt authentication
 - passport google 2.0 strategy
+##### Security:
+- bcrypt (for password hashing)
 ##### Session Storage:
 - PostgreSQL
 - Redis
