@@ -15,7 +15,8 @@
 > Node.js Nest.js API. Using Postgres & Redis
 
 ## Description
-This generator will help you to build your own Nest.js Mongodb/MySQL API using TypeScript 4
+A soccer online manager game RESTful API 
+An application where football/soccer fans can create fantasy teams and are able to sell or buy players.
 
 ### Project Introduction
 - Support ES6/ES7 features
@@ -65,20 +66,24 @@ yo nest-js-boilerplate
 App Skeleton:
 
 ```
+├── docker
+│├── postgres
+││   └── ...
+│└── App.Dockerfile
 ├── src
 │├── routes
 ││├── app
 │││   └── ...
-││├── v1
-│││├── auth
-││││   └── ...
-│││├── users
-││││   └── ...
-│││├── teams
-││││   └── ...
-│││├── players
-││││   └── ...
-│││└── ...
+││└── v1
+││ ├── auth
+││ │   └── ...
+││ ├── users
+││ │   └── ...
+││ ├── teams
+││ │   └── ...
+││ ├── players
+││ │   └── ...
+││ └── ...
 │├── data
 ││├── migrations
 │││   └── ...
