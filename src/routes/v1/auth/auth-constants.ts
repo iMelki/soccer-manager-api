@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 const authConstants = {
   jwt: {
     secret: '6673620dc356e8d339fbb89adebe2a4dbc27c1f0c347942d159c2254187d9fc9a029f6c6199128b28a6d1e382fbab261d8b92d8dd361d43f29bacd8238134ce1',

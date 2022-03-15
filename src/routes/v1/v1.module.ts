@@ -8,7 +8,7 @@ import PlayersModule from './players/players.module';
 
 const routes: Routes = [
   {
-    path: '/v1',
+    path: '/api/v1',
     children: [
       { path: '/auth', module: AuthModule },
       { path: '/users', module: UsersModule },

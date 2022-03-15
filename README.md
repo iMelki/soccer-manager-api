@@ -27,12 +27,12 @@ An application where football/soccer fans can create fantasy teams and are able 
 - Prettier
 
 ## Features
+##### Security:
+- bcrypt (for password hashing)
 ##### Authentication:
 - passport local strategy
 - jwt authentication
 - passport google 2.0 strategy
-##### Security:
-- bcrypt (for password hashing)
 ##### Session Storage:
 - PostgreSQL
 - Redis

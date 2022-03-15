@@ -2,7 +2,7 @@ import {
   Controller, Get, Post, Body, Patch,
   Param,
   Delete,
-  // UseGuards,
+  UseGuards,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -13,7 +13,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 
-// import JwtAccessGuard from '@guards/jwt-access.guard';
+import JwtAccessGuard from '@guards/jwt-access.guard';
 
 import TeamEntity from './schemas/team.entity';
 import TeamsService from './teams.service';
@@ -25,7 +25,7 @@ import UpdateTeamDto from './dto/update-team.dto';
 @ApiBearerAuth()
 // @UseInterceptors(WrapResponseInterceptor)
 @ApiExtraModels(TeamEntity)
-@Controller('teams')
+@Controller()
 export default class TeamsController {
   constructor(private readonly teamsService: TeamsService) {}
 
@@ -54,7 +54,7 @@ export default class TeamsController {
     },
     description: '401. UnauthorizedException.',
   })
-  // @UseGuards(JwtAccessGuard)
+  @UseGuards(JwtAccessGuard)
   // @Serialize(AllUsersResponseEntity)
   @Get()
   findAll() {
