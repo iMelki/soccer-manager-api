@@ -17,7 +17,8 @@ export default class TeamsService {
   public async create(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
     let value = 0;
     // Create 20 new PLAYERS for the TEAM:
-    // TODO: Get these constants from CONFIG:
+    // TODO: Get these constants from CONFIG (add the initDtos below)
+    // TODO: Get random data from a 3rd party API
     const playerDtos: CreatePlayerDto[] = [];
     // 3 goalkeepers:
     for (let i = 0; i < 3; i += 1) {
