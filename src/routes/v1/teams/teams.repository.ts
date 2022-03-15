@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, UpdateResult } from 'typeorm/index';
+import { FindOneOptions, Repository, UpdateResult } from 'typeorm/index';
 // import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 // import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
 // import PaginationUtils from '@utils/pagination.utils';
@@ -27,8 +27,14 @@ export default class TeamsRepository {
     });
   }
 
-  public async getById(id: number): Promise<TeamEntity | undefined> {
-    return this.teamsModel.findOne(id);
+  public async getById(id: number, options?: FindOneOptions<TeamEntity>): Promise<TeamEntity | undefined> {
+    return this.teamsModel.findOne(id, options);
+  }
+
+  public async getByIdIncludingPlayers(id: number): Promise<TeamEntity | undefined> {
+    return this.teamsModel.findOne(id, {
+      relations: ['players'],
+    });
   }
 
   public async getByUserId(id: number): Promise<TeamEntity | undefined> {

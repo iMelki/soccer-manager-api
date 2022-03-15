@@ -84,8 +84,14 @@ export default class TeamsService {
     return `This action returns all teams`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} team`;
+  public async findOne(id: number): Promise<TeamEntity | undefined> {
+    return this.teamsRepository.getById(id);
+  }
+
+  public async findOneIncludingPlayers(id: number): Promise<TeamEntity | undefined> {
+    return this.teamsRepository.getById(id, {
+      relations: ['players'],
+    });
   }
 
   update(id: number, updateTeamDto: UpdateTeamDto) {
