@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 import SignUpDto from '@v1/auth/dto/sign-up.dto';
 import { UpdateResult } from 'typeorm/index';
+import TeamsService from '@v1/teams/teams.service';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
 import UsersRepository from './users.repository';
@@ -12,16 +13,31 @@ import UpdateUserDto from './dto/update-user.dto';
 
 @Injectable()
 export default class UsersService {
-  constructor(private readonly usersRepository: UsersRepository) {
-  }
+  constructor(
+    private readonly usersRepository: UsersRepository,
+    private readonly teamsService: TeamsService,
+  ) {}
 
   public async create(user: SignUpDto): Promise<UserEntity> {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
-    return this.usersRepository.create({
+    const userEntity = await this.usersRepository.create({
       ...user,
       password: hashedPassword,
     });
+
+    // Create a new TEAM
+    const team = await this.teamsService.create({
+      name: `NEW TEAM ${userEntity?.id}`,
+      country: 'USA',
+    });
+
+    await this.usersRepository.updateById(userEntity?.id, {
+      team,
+      verified: true,
+    });
+
+    return userEntity;
   }
 
   public async getByEmail(email: string): Promise<UserEntity | undefined> {
