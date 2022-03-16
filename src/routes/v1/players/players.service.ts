@@ -6,8 +6,9 @@ import PlayersRepository from './players.repository';
 
 @Injectable()
 export default class PlayersService {
-  constructor(private readonly playersRepository: PlayersRepository) {
-  }
+  constructor(
+    private readonly playersRepository: PlayersRepository,
+  ) {}
 
   public async create(createPlayerDto: CreatePlayerDto): Promise<PlayerEntity> {
     return this.playersRepository.create(createPlayerDto);

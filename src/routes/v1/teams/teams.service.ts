@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+// import { JwtService } from '@nestjs/jwt';
 import CreatePlayerDto from '@v1/players/dto/create-player.dto';
 import PlayerEntity from '@v1/players/entities/player.entity';
 import { Position } from '@v1/players/enums/position.enum';
@@ -10,9 +11,11 @@ import TeamsRepository from './teams.repository';
 
 @Injectable()
 export default class TeamsService {
-  constructor(private readonly teamsRepository: TeamsRepository,
-    private readonly playersService: PlayersService) {
-  }
+  constructor(
+    private readonly teamsRepository: TeamsRepository,
+    private readonly playersService: PlayersService,
+    // private readonly jwtService: JwtService,
+  ) {}
 
   public async create(createTeamDto: CreateTeamDto): Promise<TeamEntity> {
     let value = 0;
@@ -61,14 +64,6 @@ export default class TeamsService {
       value += playerDtos[i].value || 0;
     }
 
-    // for (let i = 0; i < 20; i += 1) {
-    //   playerDtos.push(new CreatePlayerDto({
-    //     first: 'first',
-    //     last: 'LAST',
-    //     country: 'ISR',
-    //   }));
-    //   value += playerDtos[i].value || 0;
-    // }
     const players = await Promise.all(playerDtos.map(async (dto) => {
       return this.playersService.create(dto);
     }));

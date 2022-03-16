@@ -7,7 +7,9 @@ import PlayerEntity from './entities/player.entity';
 import PlayersRepository from './players.repository';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([PlayerEntity])],
+  imports: [
+    TypeOrmModule.forFeature([PlayerEntity]),
+  ],
   controllers: [PlayersController],
   providers: [PlayersService, PlayersRepository],
   exports: [PlayersService, PlayersRepository],

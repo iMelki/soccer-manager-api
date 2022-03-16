@@ -20,6 +20,7 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import JwtAccessGuard from '@guards/jwt-access.guard';
+import OwnershipGuard from '@guards/ownership.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
 import AllUsersResponseEntity from '@v1/users/entities/all-user-response.entity';
@@ -65,6 +66,7 @@ export default class UsersController {
   @ApiParam({ name: 'id', type: String })
   @Get(':id')
   @UseGuards(JwtAccessGuard)
+  @UseGuards(OwnershipGuard)
   @Serialize(AllUsersResponseEntity)
   async getById(
     @Param('id', ParseIntPipe) id: number,
