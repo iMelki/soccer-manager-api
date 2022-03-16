@@ -6,7 +6,8 @@ import SignUpDto from '@v1/auth/dto/sign-up.dto';
 import { UpdateResult } from 'typeorm/index';
 import TeamsService from '@v1/teams/teams.service';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginatedUsersInterface } from '@interfaces/paginatedUser.interface';
+// import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
 import UsersRepository from './users.repository';
 import UserEntity from './schemas/user.entity';
 import UpdateUserDto from './dto/update-user.dto';
@@ -57,7 +58,7 @@ export default class UsersService {
   }
 
   public async getVerifiedUserById(id: number): Promise<UserEntity | undefined> {
-    return this.usersRepository.getVerifiedUserById(id);
+    return this.usersRepository.getVerifiedUserByIdIncludingTeam(id);
   }
 
   public async getUnverifiedUserById(id: number): Promise<UserEntity | undefined> {

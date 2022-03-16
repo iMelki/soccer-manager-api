@@ -1,4 +1,7 @@
+import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { Injectable } from '@nestjs/common';
+import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
 import CreatePlayerDto from './dto/create-player.dto';
 import UpdatePlayerDto from './dto/update-player.dto';
 import PlayerEntity from './entities/player.entity';
@@ -15,15 +18,21 @@ export default class PlayersService {
   }
 
   findAll() {
-    return `This action returns all players`;
+    return 'This action returns all players';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} player`;
+  public async findAllWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntitiesInterface<PlayerEntity>> {
+    return this.playersRepository.getAllWithPagination(options);
   }
 
-  update(id: number, updatePlayerDto: UpdatePlayerDto) {
-    return `This action updates a #${id} player`;
+  public async findOne(id: number): Promise<PlayerEntity | undefined> {
+    return this.playersRepository.getById(id);
+  }
+
+  update(id: number, data: UpdatePlayerDto): Promise<UpdateResult> {
+    return this.playersRepository.updateById(id, data);
   }
 
   remove(id: number) {

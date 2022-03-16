@@ -1,9 +1,9 @@
+import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import PaginationUtils from '@utils/pagination.utils';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository, UpdateResult } from 'typeorm/index';
-// import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-// import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
-// import PaginationUtils from '@utils/pagination.utils';
 import CreateTeamDto from './dto/create-team.dto';
 import UpdateTeamDto from './dto/update-team.dto';
 import TeamEntity from './schemas/team.entity';
@@ -21,17 +21,24 @@ export default class TeamsRepository {
 
   public async getByName(name: string): Promise<TeamEntity | undefined> {
     return this.teamsModel.findOne({
-      where: [{
-        name,
-      }],
+      where: [
+        {
+          name,
+        },
+      ],
     });
   }
 
-  public async getById(id: number, options?: FindOneOptions<TeamEntity>): Promise<TeamEntity | undefined> {
+  public async getById(
+    id: number,
+    options?: FindOneOptions<TeamEntity>,
+  ): Promise<TeamEntity | undefined> {
     return this.teamsModel.findOne(id, options);
   }
 
-  public async getByIdIncludingPlayers(id: number): Promise<TeamEntity | undefined> {
+  public async getByIdIncludingPlayers(
+    id: number,
+  ): Promise<TeamEntity | undefined> {
     return this.teamsModel.findOne(id, {
       relations: ['players'],
     });
@@ -47,21 +54,21 @@ export default class TeamsRepository {
     return this.teamsModel.update(id, data);
   }
 
-  // public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedUsersInterface> {
-  //   const verified = true;
-  //   const [users, totalCount] = await Promise.all([
-  //     this.usersModel.find({
-  //       where: {
-  //         verified,
-  //       },
-  //       skip: PaginationUtils.getSkipCount(options.page, options.limit),
-  //       take: PaginationUtils.getLimitCount(options.limit),
-  //     }),
-  //     this.usersModel.count({
-  //       where: { verified },
-  //     }),
-  //   ]);
+  public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntitiesInterface<TeamEntity>> {
+    const verified = true;
+    const [teams, totalCount] = await Promise.all([
+      this.teamsModel.find({
+        where: {
+          verified,
+        },
+        skip: PaginationUtils.getSkipCount(options.page, options.limit),
+        take: PaginationUtils.getLimitCount(options.limit),
+      }),
+      this.teamsModel.count({
+        where: { verified },
+      }),
+    ]);
 
-  //   return { paginatedResult: users, totalCount };
-  // }
+    return { paginatedResult: teams, totalCount };
+  }
 }

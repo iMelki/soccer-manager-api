@@ -30,7 +30,7 @@ class PaginationUtils {
     if (param) {
       const tmp = parseInt(param, 10);
 
-      if (isNaN(tmp)) return false;
+      if (Number.isNaN(tmp)) return false;
       if (tmp <= 0) return false;
 
       return tmp;

@@ -1,9 +1,11 @@
+import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { Injectable } from '@nestjs/common';
 // import { JwtService } from '@nestjs/jwt';
 import CreatePlayerDto from '@v1/players/dto/create-player.dto';
-import PlayerEntity from '@v1/players/entities/player.entity';
 import { Position } from '@v1/players/enums/position.enum';
 import PlayersService from '@v1/players/players.service';
+import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
 import CreateTeamDto from './dto/create-team.dto';
 import UpdateTeamDto from './dto/update-team.dto';
 import TeamEntity from './schemas/team.entity';
@@ -75,8 +77,14 @@ export default class TeamsService {
     }));
   }
 
-  findAll() {
-    return `This action returns all teams`;
+  public async findAll() { // : Promise<TeamEntity[]> {
+    return 'This action returns all teams';
+  }
+
+  public async findAllWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntitiesInterface<TeamEntity>> {
+    return this.teamsRepository.getAllWithPagination(options);
   }
 
   public async findOne(id: number): Promise<TeamEntity | undefined> {
@@ -89,8 +97,8 @@ export default class TeamsService {
     });
   }
 
-  update(id: number, updateTeamDto: UpdateTeamDto) {
-    return `This action updates a #${id} team`;
+  update(id: number, data: UpdateTeamDto): Promise<UpdateResult> {
+    return this.teamsRepository.updateById(id, data);
   }
 
   remove(id: number) {

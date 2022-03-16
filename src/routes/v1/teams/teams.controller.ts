@@ -3,6 +3,8 @@ import {
   Param,
   Delete,
   UseGuards,
+  Query,
+  BadRequestException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,11 +19,17 @@ import {
 
 import JwtAccessGuard from '@guards/jwt-access.guard';
 
+import Serialize from '@decorators/serialization.decorator';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
+import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
 import TeamEntity from './schemas/team.entity';
 import TeamsService from './teams.service';
 import CreateTeamDto from './dto/create-team.dto';
 import UpdateTeamDto from './dto/update-team.dto';
-// import Serialize from '@decorators/serialization.decorator';
+import PaginationUtils from '../../../utils/pagination.utils';
+import ResponseUtils from '../../../utils/response.utils';
+import TeamResponseEntity from './entities/team-response.entity';
+import AllTeamsResponseEntity from './entities/all-team-response.entity';
 
 @ApiTags('Teams')
 @ApiBearerAuth()
@@ -54,7 +62,7 @@ export default class TeamsController {
     description: '401. UnauthorizedException.',
   })
   @UseGuards(JwtAccessGuard)
-  // @Serialize(AllUsersResponseEntity)
+  @Serialize(TeamResponseEntity)
   @Post()
   create(@Body() createTeamDto: CreateTeamDto) {
     return this.teamsService.create(createTeamDto);
@@ -81,10 +89,25 @@ export default class TeamsController {
     description: '401. UnauthorizedException.',
   })
   @UseGuards(JwtAccessGuard)
-  // @Serialize(AllUsersResponseEntity)
+  @Serialize(AllTeamsResponseEntity)
   @Get()
-  findAll() {
-    return this.teamsService.findAll();
+  public async findAll(@Query() query: any) {
+    const paginationParams: PaginationParamsInterface | false = PaginationUtils.normalizeParams(query.page);
+    if (!paginationParams) {
+      throw new BadRequestException('Invalid pagination parameters');
+    }
+
+    const paginatedUsers: PaginatedEntitiesInterface<TeamEntity> = await this.teamsService.findAllWithPagination(paginationParams);
+
+    return ResponseUtils.success(
+      'users',
+      paginatedUsers.paginatedResult,
+      {
+        location: 'users',
+        paginationParams,
+        totalCount: paginatedUsers.totalCount,
+      },
+    );
   }
 
   @ApiOkResponse({
@@ -112,7 +135,7 @@ export default class TeamsController {
   })
   @ApiParam({ name: 'id', type: String })
   @UseGuards(JwtAccessGuard)
-  // @Serialize(AllUsersResponseEntity)
+  @Serialize(TeamResponseEntity)
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.teamsService.findOneIncludingPlayers(+id);
@@ -143,7 +166,7 @@ export default class TeamsController {
   })
   @ApiParam({ name: 'id', type: String })
   @UseGuards(JwtAccessGuard)
-  // @Serialize(AllUsersResponseEntity)
+  @Serialize(TeamResponseEntity)
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateTeamDto: UpdateTeamDto) {
     return this.teamsService.update(+id, updateTeamDto);
@@ -174,7 +197,7 @@ export default class TeamsController {
   })
   @ApiParam({ name: 'id', type: String })
   @UseGuards(JwtAccessGuard)
-  // @Serialize(AllUsersResponseEntity)
+  // @Serialize(UserResponseEntity)
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.teamsService.remove(+id);
