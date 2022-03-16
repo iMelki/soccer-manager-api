@@ -1,9 +1,9 @@
+import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm/index';
-// import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-// import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
-// import PaginationUtils from '@utils/pagination.utils';
+import PaginationUtils from '@utils/pagination.utils';
 import CreatePlayerDto from './dto/create-player.dto';
 import UpdatePlayerDto from './dto/update-player.dto';
 import PlayerEntity from './entities/player.entity';
@@ -21,9 +21,11 @@ export default class PlayersRepository {
 
   public async getByName(first: string): Promise<PlayerEntity | undefined> {
     return this.playersModel.findOne({
-      where: [{
-        first,
-      }],
+      where: [
+        {
+          first,
+        },
+      ],
     });
   }
 
@@ -41,21 +43,21 @@ export default class PlayersRepository {
     return this.playersModel.update(id, data);
   }
 
-  // public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedUsersInterface> {
-  //   const verified = true;
-  //   const [users, totalCount] = await Promise.all([
-  //     this.usersModel.find({
-  //       where: {
-  //         verified,
-  //       },
-  //       skip: PaginationUtils.getSkipCount(options.page, options.limit),
-  //       take: PaginationUtils.getLimitCount(options.limit),
-  //     }),
-  //     this.usersModel.count({
-  //       where: { verified },
-  //     }),
-  //   ]);
+  public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntitiesInterface<PlayerEntity>> {
+    const verified = true;
+    const [users, totalCount] = await Promise.all([
+      this.playersModel.find({
+        where: {
+          verified,
+        },
+        skip: PaginationUtils.getSkipCount(options.page, options.limit),
+        take: PaginationUtils.getLimitCount(options.limit),
+      }),
+      this.playersModel.count({
+        where: { verified },
+      }),
+    ]);
 
-  //   return { paginatedResult: users, totalCount };
-  // }
+    return { paginatedResult: users, totalCount };
+  }
 }

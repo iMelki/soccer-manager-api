@@ -20,16 +20,19 @@ import {
   getSchemaPath,
 } from '@nestjs/swagger';
 import JwtAccessGuard from '@guards/jwt-access.guard';
+import OwnershipGuard from '@guards/ownership.guard';
 import WrapResponseInterceptor from '@interceptors/wrap-response.interceptor';
 import Serialize from '@decorators/serialization.decorator';
 import AllUsersResponseEntity from '@v1/users/entities/all-user-response.entity';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
+// import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginatedUsersInterface } from '@interfaces/paginatedUser.interface';
 import { SuccessResponseInterface } from '@interfaces/success-response.interface';
 import UserEntity from './schemas/user.entity';
 import UsersService from './users.service';
 import PaginationUtils from '../../../utils/pagination.utils';
 import ResponseUtils from '../../../utils/response.utils';
+import UserResponseEntity from './entities/user-response.entity';
 
 @ApiTags('Users')
 @ApiBearerAuth()
@@ -65,7 +68,8 @@ export default class UsersController {
   @ApiParam({ name: 'id', type: String })
   @Get(':id')
   @UseGuards(JwtAccessGuard)
-  @Serialize(AllUsersResponseEntity)
+  @UseGuards(OwnershipGuard)
+  @Serialize(UserResponseEntity)
   async getById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<SuccessResponseInterface> {

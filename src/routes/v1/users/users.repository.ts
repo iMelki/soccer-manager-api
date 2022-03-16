@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, UpdateResult } from 'typeorm/index';
 import SignUpDto from '@v1/auth/dto/sign-up.dto';
 import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
-import { PaginatedUsersInterface } from '@interfaces/paginatedEntity.interface';
+// import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginatedUsersInterface } from '@interfaces/paginatedUser.interface';
 import PaginationUtils from '@utils/pagination.utils';
 import UpdateUserDto from './dto/update-user.dto';
 import UserEntity from './schemas/user.entity';
@@ -55,6 +56,13 @@ export default class UsersRepository {
   public async getVerifiedUserById(id: number): Promise<UserEntity | undefined> {
     return this.usersModel.findOne(id, {
       where: [{ verified: true }],
+    });
+  }
+
+  public async getVerifiedUserByIdIncludingTeam(id: number): Promise<UserEntity | undefined> {
+    return this.usersModel.findOne(id, {
+      where: [{ verified: true }],
+      relations: ['team', 'team.players'],
     });
   }
 

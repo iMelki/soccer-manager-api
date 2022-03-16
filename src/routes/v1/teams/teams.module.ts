@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import PlayersModule from '@v1/players/players.module';
@@ -13,7 +14,13 @@ import TeamsRepository from './teams.repository';
     PlayersModule,
   ],
   controllers: [TeamsController],
-  providers: [TeamsService, TeamsRepository],
-  exports: [TeamsService, TeamsRepository],
+  providers: [
+    TeamsService,
+    TeamsRepository,
+  ],
+  exports: [
+    TeamsService,
+    TeamsRepository,
+  ],
 })
 export default class TeamsModule {}

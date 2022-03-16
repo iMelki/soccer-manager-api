@@ -1,6 +1,4 @@
-import UserEntity from '@v1/users/schemas/user.entity';
-
-export interface PaginatedUsersInterface {
-  readonly paginatedResult: UserEntity[] | [],
+export interface PaginatedEntitiesInterface<E> {
+  readonly paginatedResult: E[] | [],
   readonly totalCount: number,
 }
