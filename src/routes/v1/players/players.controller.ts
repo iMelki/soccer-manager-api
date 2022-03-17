@@ -1,13 +1,22 @@
 import {
   Controller, Get, Post, Body, Patch, Param, Delete, UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiExtraModels, ApiNotFoundResponse, ApiOkResponse, ApiParam, ApiTags, ApiUnauthorizedResponse, getSchemaPath } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiExtraModels,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiParam,
+  ApiTags,
+  ApiUnauthorizedResponse,
+  getSchemaPath,
+} from '@nestjs/swagger';
 
+import JwtAccessGuard from '@guards/jwt-access.guard';
 import PlayersService from './players.service';
 import CreatePlayerDto from './dto/create-player.dto';
 import UpdatePlayerDto from './dto/update-player.dto';
 import PlayerEntity from './entities/player.entity';
-import JwtAccessGuard from '@guards/jwt-access.guard';
 
 @ApiTags('Players')
 @ApiBearerAuth()
