@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOneOptions, Repository, UpdateResult } from 'typeorm/index';
 import CreateTeamDto from './dto/create-team.dto';
-import UpdateTeamDto from './dto/update-team.dto';
+// import UpdateTeamDto from './dto/update-team.dto';
 import TeamEntity from './schemas/team.entity';
 
 @Injectable()
@@ -44,13 +44,13 @@ export default class TeamsRepository {
     });
   }
 
-  public async getByUserId(id: number): Promise<TeamEntity | undefined> {
-    return this.teamsModel.findOne({
-      where: [{ userId: id }],
+  public async getByIdIncludingUser(id: number): Promise<TeamEntity | undefined> {
+    return this.teamsModel.findOne(id, {
+      relations: ['user', 'players'],
     });
   }
 
-  public updateById(id: number, data: UpdateTeamDto): Promise<UpdateResult> {
+  public updateById(id: number, data: CreateTeamDto): Promise<UpdateResult> {
     return this.teamsModel.update(id, data);
   }
 

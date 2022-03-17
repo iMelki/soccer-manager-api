@@ -55,4 +55,9 @@ export default class MarketRepository {
 
     return { paginatedResult: transfers, totalCount };
   }
+
+  public async remove(id: number): Promise<TransferEntity | null> {
+    const entity = await this.getById(id);
+    return entity ? this.transferModel.remove(entity) : null;
+  }
 }

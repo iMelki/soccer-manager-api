@@ -18,8 +18,8 @@ export default class TransferEntity {
       @Column()
       readonly price?: number = 0;
 
-      //
-      @OneToOne(() => PlayerEntity, (player) => player.transfer)
+      // , (player) => player.transfer
+      @OneToOne(() => PlayerEntity)
       @JoinColumn()
       readonly player?: PlayerEntity | undefined;
 }

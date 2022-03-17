@@ -3,13 +3,13 @@ import {
   Column,
   PrimaryGeneratedColumn,
   ManyToOne,
-  OneToOne,
+  // OneToOne,
   // Index,
 } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 import TeamEnitity from '@v1/teams/schemas/team.entity';
+// import TransferEntity from '@v1/market/entities/transfer.entity';
 import { Position } from '../enums/position.enum';
-import TransferEntity from '@v1/market/entities/transfer.entity';
 
   @Entity('players')
 export default class PlayerEntity {
@@ -44,6 +44,6 @@ export default class PlayerEntity {
       @ManyToOne(() => TeamEnitity, (team) => team.players, { onDelete: 'CASCADE' })
       readonly team: TeamEnitity | undefined;
 
-      @OneToOne(() => TransferEntity, (transfer) => transfer.player, { onDelete: 'SET NULL' })
-      readonly transfer: TransferEntity | null = null;
+  // @OneToOne(() => TransferEntity, (transfer) => transfer.player, { onDelete: 'SET NULL' })
+  // readonly transfer: TransferEntity | null = null;
 }
