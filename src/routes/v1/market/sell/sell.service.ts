@@ -16,7 +16,7 @@ export default class SellService implements OnModuleInit {
     await this.consumerService.consume(
       { topic: 'sell' },
       {
-        eachMessage: async ({ topic, partition, message }) => {
+        eachMessage: async ({ message }) => {
           // TODO: Deserialize Data
           // const obj = (eval(`new ${typeSent}`))();
           const price = message?.value;
