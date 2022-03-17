@@ -16,7 +16,7 @@ import TransferEntity from '../entities/transfer.entity';
 @ApiBearerAuth()
 // @UseInterceptors(WrapResponseInterceptor)
 @ApiExtraModels(JwtTokensDto)
-@Controller()
+@Controller('/sell')
 export default class SellController {
   constructor(private readonly sellService: SellService) {}
 
