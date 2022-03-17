@@ -1,15 +1,13 @@
 import {
-  Controller, Get, Post, Body, Patch, Param, Delete, // UseGuards,
+  Controller, Post, Body, UseGuards, // UseGuards,
 } from '@nestjs/common';
 import {
-  ApiOkResponse, ApiParam, ApiTags, ApiUnauthorizedResponse, getSchemaPath,
+  ApiOkResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath,
 } from '@nestjs/swagger';
-// import JwtAccessGuard from '@guards/jwt-access.guard';
+import JwtAccessGuard from '@guards/jwt-access.guard';
 import SellService from './sell.service';
-// import CreateSellDto from './dto/create-sell.dto';
-import UpdateSellDto from './dto/update-sell.dto';
 import SetPlayerForSaleRequest from './dto/player-for-sale-request.dto';
-import SellEntity from './entities/sell.entity';
+import TransferEntity from '../entities/transfer.entity';
 
 @ApiTags('Sell')
 // @UseInterceptors(WrapResponseInterceptor)
@@ -23,7 +21,7 @@ export default class SellController {
       type: 'object',
       properties: {
         data: {
-          $ref: getSchemaPath(SellEntity),
+          $ref: getSchemaPath(TransferEntity),
         },
       },
     },
@@ -38,31 +36,12 @@ export default class SellController {
     },
     description: '401. UnauthorizedException.',
   })
-  @ApiParam({ name: 'id', type: String })
-  // @UseGuards(JwtAccessGuard)
+  @UseGuards(JwtAccessGuard)
   // @Serialize(TeamResponseEntity)
-  @Post(':id')
-  create(@Body() playerSellDto: SetPlayerForSaleRequest) {
+  @Post()
+  create(
+    @Body() playerSellDto: SetPlayerForSaleRequest,
+  ) {
     return this.sellService.sellPlayer(playerSellDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.sellService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.sellService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateSellDto: UpdateSellDto) {
-    return this.sellService.update(+id, updateSellDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.sellService.remove(+id);
   }
 }

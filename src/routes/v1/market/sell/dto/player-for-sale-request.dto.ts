@@ -1,9 +1,13 @@
 export default class SetPlayerForSaleRequest {
-  token: string | undefined;
+  constructor(
+    public readonly price: number,
+    public readonly playerId: number,
+  ) {}
 
-  userId?: number;
-
-  playerId: number | undefined;
-
-  price: number = 0;
+  toString() {
+    return JSON.stringify({
+      playerId: this.playerId,
+      price: this.price,
+    });
+  }
 }

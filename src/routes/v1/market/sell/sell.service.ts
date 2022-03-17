@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import SetPlayerForSaleRequest from './dto/player-for-sale-request.dto';
-import UpdateSellDto from './dto/update-sell.dto';
 import ProducerService from './producer.service';
 import ConsumerService from './consumer.service';
 
@@ -36,21 +35,5 @@ export default class SellService implements OnModuleInit {
       ],
     });
     return `Hello World!\n ${playerSellDto}`;
-  }
-
-  findAll() {
-    return 'This action returns all sell';
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} sell`;
-  }
-
-  update(id: number, updateSellDto: UpdateSellDto) {
-    return `This action updates a #${updateSellDto} sell`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} sell`;
   }
 }
