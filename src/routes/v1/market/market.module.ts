@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Routes, RouterModule } from 'nest-router';
+import PlayersService from '@v1/players/players.service';
+import PlayersModule from '@v1/players/players.module';
 import MarketService from './market.service';
 import MarketController from './market.controller';
 import ConsumerService from './services/consumer.service';
@@ -23,7 +25,7 @@ const routes: Routes = [
   imports: [
     RouterModule.forRoutes(routes),
     TypeOrmModule.forFeature([TransferEntity]),
-    // SellModule,
+    PlayersModule,
   ],
   controllers: [
     MarketController,
@@ -35,7 +37,11 @@ const routes: Routes = [
     ConsumerService,
     ProducerService,
     SellService,
+    PlayersService,
   ],
-  exports: [MarketService, MarketRepository],
+  exports: [
+    MarketService,
+    MarketRepository,
+  ],
 })
 export default class MarketModule {}

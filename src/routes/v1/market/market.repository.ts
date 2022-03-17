@@ -3,9 +3,9 @@ import { PaginationParamsInterface } from '@interfaces/pagination-params.interfa
 import PaginationUtils from '@utils/pagination.utils';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, Repository, UpdateResult } from 'typeorm/index';
+import { FindOneOptions, Repository } from 'typeorm/index';
 import TransferEntity from './entities/transfer.entity';
-import SetPlayerForSaleRequest from './sell/dto/player-for-sale-request.dto';
+import SetPlayerForSale from './sell/dto/player-for-sale.dto';
 
 @Injectable()
 export default class MarketRepository {
@@ -14,7 +14,7 @@ export default class MarketRepository {
     private readonly transferModel: Repository<TransferEntity>,
   ) {}
 
-  public create(player: SetPlayerForSaleRequest): Promise<TransferEntity> {
+  public create(player: SetPlayerForSale): Promise<TransferEntity> {
     return this.transferModel.save(player);
   }
 
@@ -41,10 +41,6 @@ export default class MarketRepository {
     return this.transferModel.findOne(id, {
       relations: ['player'],
     });
-  }
-
-  public updateById(id: number, data: SetPlayerForSaleRequest): Promise<UpdateResult> {
-    return this.transferModel.update(id, data);
   }
 
   public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntitiesInterface<TransferEntity>> {

@@ -12,13 +12,14 @@ import PlayerEntity from '@v1/players/entities/player.entity';
 export default class TransferEntity {
       @ApiProperty({ type: String })
       @PrimaryGeneratedColumn()
-      readonly id: number = 1;
+      readonly id?: number = 1;
 
       @ApiProperty({ type: Number })
       @Column()
-      readonly price: number = 0;
+      readonly price?: number = 0;
 
-      @OneToOne(() => PlayerEntity, (player) => player.team)
+      //
+      @OneToOne(() => PlayerEntity, (player) => player.transfer)
       @JoinColumn()
-      readonly players: PlayerEntity | undefined;
+      readonly player?: PlayerEntity | undefined;
 }

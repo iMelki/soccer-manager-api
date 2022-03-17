@@ -3,12 +3,14 @@ import SetPlayerForSaleRequest from './dto/player-for-sale-request.dto';
 import ProducerService from '../services/producer.service';
 import ConsumerService from '../services/consumer.service';
 import MarketRepository from '../market.repository';
+import PlayersService from '@v1/players/players.service';
 
 @Injectable()
 export default class SellService implements OnModuleInit {
   constructor(
     private readonly producerService: ProducerService,
     private readonly consumerService: ConsumerService,
+    private readonly playerService: PlayersService,
     private readonly marketRepository: MarketRepository,
   ) {}
 
@@ -17,16 +19,14 @@ export default class SellService implements OnModuleInit {
       { topic: 'sell' },
       {
         eachMessage: async ({ message }) => {
-          // TODO: Deserialize Data
-          // const obj = (eval(`new ${typeSent}`))();
+          // Deserialize Data:
           const price = message?.value;
           const playerId = message?.key;
-          console.log(`price: ${price}`);
-          console.log(`playerId: ${playerId}`);
-          // TODO: Add TransferEntity into Transfers table
+          const player = await this.playerService.findOne(Number(playerId));
+          // Add TransferEntity into Transfers table:
           this.marketRepository.create({
-            playerId: 333,
-            price: 1000000,
+            player: player,
+            price: Number(price?.toString()),
           });
         },
       },
@@ -45,16 +45,16 @@ export default class SellService implements OnModuleInit {
   //   return `Hello World!\n ${playerSellDto}`;
   // }
 
-  async sellPlayer(playerSellDto: SetPlayerForSaleRequest) {
+  async sellPlayer(playerSellRequest: SetPlayerForSaleRequest) {
     await this.producerService.produce({
       topic: 'sell',
       messages: [
         {
-          key: playerSellDto.playerId.toString(),
-          value: playerSellDto.price.toString(),
+          key: playerSellRequest.playerId?.toString(),
+          value: playerSellRequest?.price?.toString() || '0',
         },
       ],
     });
-    return `Hello World!\n ${playerSellDto}`;
+    return `Hello World!\n ${playerSellRequest}`;
   }
 }
