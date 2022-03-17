@@ -2,16 +2,20 @@ import {
   Controller, Post, Body, UseGuards, // UseGuards,
 } from '@nestjs/common';
 import {
+  ApiBearerAuth,
+  ApiExtraModels,
   ApiOkResponse, ApiTags, ApiUnauthorizedResponse, getSchemaPath,
 } from '@nestjs/swagger';
+import JwtTokensDto from '@v1/auth/dto/jwt-tokens.dto';
 import JwtAccessGuard from '@guards/jwt-access.guard';
 import SellService from './sell.service';
 import SetPlayerForSaleRequest from './dto/player-for-sale-request.dto';
 import TransferEntity from '../entities/transfer.entity';
 
-@ApiTags('Sell')
+@ApiTags('Market')
+@ApiBearerAuth()
 // @UseInterceptors(WrapResponseInterceptor)
-// @ApiExtraModels(JwtTokensDto)
+@ApiExtraModels(JwtTokensDto)
 @Controller()
 export default class SellController {
   constructor(private readonly sellService: SellService) {}
