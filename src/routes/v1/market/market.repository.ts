@@ -43,9 +43,10 @@ export default class MarketRepository {
     });
   }
 
-  public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntitiesInterface<TransferEntity>> {
+  public async getAllDetailedWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntitiesInterface<TransferEntity>> {
     const [transfers, totalCount] = await Promise.all([
       this.transferModel.find({
+        relations: ['player'],
         skip: PaginationUtils.getSkipCount(options.page, options.limit),
         take: PaginationUtils.getLimitCount(options.limit),
       }),

@@ -1,25 +1,42 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable import/prefer-default-export */
+import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
+import { PaginationParamsInterface } from '@interfaces/pagination-params.interface';
 import { Injectable } from '@nestjs/common';
-import CreateMarketDto from './dto/create-market.dto';
-import UpdateMarketDto from './dto/update-market.dto';
+import TransferEntity from './entities/transfer.entity';
+import MarketRepository from './market.repository';
+import SetPlayerForSale from './sell/dto/player-for-sale.dto';
 
 @Injectable()
 export default class MarketService {
-  create(createMarketDto: CreateMarketDto) {
-    return 'This action adds a new market';
+  constructor(
+    private readonly marketRepository: MarketRepository,
+  ) {}
+
+  create(playerForSaleDto: SetPlayerForSale) {
+    return `This action adds a new Player to the Transfer List: ${playerForSaleDto}`;
   }
 
-  findAll() {
-    return 'This action returns all market';
+  public async findAll() { // : Promise<TeamEntity[]> {
+    return 'This action returns all players on the Transfer List';
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} market`;
+  public async getAllDetailedWithPagination(
+    options: PaginationParamsInterface,
+  ): Promise<PaginatedEntitiesInterface<TransferEntity>> {
+    return this.marketRepository.getAllDetailedWithPagination(options);
   }
 
-  update(id: number, updateMarketDto: UpdateMarketDto) {
-    return `This action updates a #${id} market`;
+  public async findOne(id: number): Promise<TransferEntity | undefined> {
+    return this.marketRepository.getById(id);
+  }
+
+  public async findOneIncludingDetails(id: number): Promise<TransferEntity | undefined> {
+    return this.marketRepository.getById(id, {
+      relations: ['player'],
+    });
+  }
+
+  update(id: number, playerForSaleDto: SetPlayerForSale) {
+    return `This action updates a #${id} market: ${playerForSaleDto}`;
   }
 
   remove(id: number) {

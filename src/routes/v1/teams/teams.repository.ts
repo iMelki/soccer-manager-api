@@ -55,18 +55,12 @@ export default class TeamsRepository {
   }
 
   public async getAllWithPagination(options: PaginationParamsInterface): Promise<PaginatedEntitiesInterface<TeamEntity>> {
-    const verified = true;
     const [teams, totalCount] = await Promise.all([
       this.teamsModel.find({
-        where: {
-          verified,
-        },
         skip: PaginationUtils.getSkipCount(options.page, options.limit),
         take: PaginationUtils.getLimitCount(options.limit),
       }),
-      this.teamsModel.count({
-        where: { verified },
-      }),
+      this.teamsModel.count(),
     ]);
 
     return { paginatedResult: teams, totalCount };
