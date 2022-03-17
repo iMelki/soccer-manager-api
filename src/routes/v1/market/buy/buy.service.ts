@@ -77,24 +77,24 @@ export default class BuyService implements OnModuleInit {
           this.marketService.remove(transferId);
           console.log('removed player from Transfer List  :) ');
 
-          // const origBuyerValue = team?.value || 0;
-          // const origBuyerBudget = team?.budget || 0;
+          const origBuyerValue = team?.value || 0;
+          const origBuyerBudget = team?.budget || 0;
 
-          // let playersArr = team?.players;
-          // if (player) {
-          //   if (playersArr) {
-          //     playersArr.push(player);
-          //   } else {
-          //     playersArr = [player];
-          //   }
-          // }
+          let playersArr = team?.players;
+          if (player) {
+            if (playersArr) {
+              playersArr.push(player);
+            } else {
+              playersArr = [player];
+            }
+          }
 
-          // this.teamsService.update(team?.id || 0, {
-          //   ...team,
-          //   value: origBuyerValue + val,
-          //   budget: origBuyerBudget - (transferObj?.price || 0),
-          //   // players: playersArr,
-          // });
+          this.teamsService.update(team?.id || 0, {
+            ...team,
+            value: origBuyerValue + val,
+            budget: origBuyerBudget - (transferObj?.price || 0),
+            // players: playersArr,
+          });
           console.log('BUYING TEAM UPDATED !!! ');
         },
       },
