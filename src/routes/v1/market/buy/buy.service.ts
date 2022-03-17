@@ -4,11 +4,11 @@ import authConstants from '@v1/auth/auth-constants';
 import TeamsService from '@v1/teams/teams.service';
 import AuthService from '@v1/auth/auth.service';
 import PlayersService from '@v1/players/players.service';
+import UsersService from '@v1/users/users.service';
 import ProducerService from '../services/producer.service';
 import ConsumerService from '../services/consumer.service';
 import MarketService from '../market.service';
 import PlayerBuyDto from './dto/player-buy.dto';
-import UsersService from '@v1/users/users.service';
 
 @Injectable()
 export default class BuyService implements OnModuleInit {
