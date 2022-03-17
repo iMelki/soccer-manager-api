@@ -1,5 +1,6 @@
 version: "3"
 services:
+  # APP :
   app:
     build:
       context: .
@@ -22,7 +23,6 @@ services:
       MAILER_HOST: smtp-relay.sendinblue.com
       # POSTGRESQL_ROOT_USER: admin
       # POSTGRESQL_PASSWORD: admin1234
-
     volumes:
       - ./:/var/www/app:cached
       - /var/www/app/node_modules # anonymous volume for node_modules only
@@ -33,6 +33,7 @@ services:
       - postgresql_database
       - redis
 
+  # Postgres :
   postgresql_database:
     image: postgres:latest
     # build:
@@ -57,6 +58,51 @@ services:
     ports:
       - "6379:6379"
 
+  # Api Gateway :
+  # api_gw:
+  #   build:
+  #     context: .
+  #     dockerfile: ./api-gateway/docker/ApiGW.Dockerfile
+  #   container_name: api_gw
+  #   working_dir: /var/www/api_gw
+  #   environment:
+  #     KAFKA_BROKERCONNECT: localhost:29092
+  #     KAFKA_PROTOCOL: http://
+  #     KAFKA_HOST: kafka
+  #     KAFKA_PORT: 29092
+  #     APP_HOST: app
+  #     REDIS_URL: redis://redis:6379
+  #     POSTGRES_HOST: postgresql_database
+  #     POSTGRES_PORT: 5432
+  #     POSTGRES_DB: productDb
+  #     POSTGRES_USER: admin
+  #     POSTGRES_PASSWORD: admin1234
+  #   volumes:
+  #     - ./:/var/www/api_gw:cached
+  #     - /var/www/api_gw/node_modules # anonymous volume for node_modules only
+  #   restart: always
+  #   ports:
+  #     - 3001:3001
+  #   links:
+  #     - kafka
+
+  # KAFKA :
+  kafka:
+    image: obsidiandynamics/kafka
+    restart: "no"
+    ports:
+      - "2181:2181"
+      - "9092:9092"
+    environment:
+      KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
+      KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: "INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT"
+      KAFKA_INTER_BROKER_LISTENER_NAME: "INTERNAL"
+      KAFKA_ZOOKEEPER_SESSION_TIMEOUT: "6000"
+      KAFKA_RESTART_ATTEMPTS: "10"
+      KAFKA_RESTART_DELAY: "5"
+      ZOOKEEPER_AUTOPURGE_PURGE_INTERVAL: "0"
+  
   # PGAdmin :
   pgadmin:
     image: dpage/pgadmin4
@@ -68,6 +114,20 @@ services:
     restart: always
     volumes: 
       - pgadmin:/root/.pgadmin
+
+  # Kafka GUI :
+  kafdrop:
+    image: obsidiandynamics/kafdrop
+    restart: "no"
+    ports:
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092"
+      JVM_OPTS: "-Xms16M -Xmx48M -Xss180K -XX:-TieredCompilation -XX:+UseStringDeduplication -noverify"
+    links:
+      - kafka
+    depends_on:
+      - "kafka"
 
 volumes:
   database-data:

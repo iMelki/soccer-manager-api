@@ -7,15 +7,10 @@ import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handleba
 
 import V1Module from '@v1/v1.module';
 
-// import { join } from 'path';
 import configuration from '../../config';
 
 import AppService from './app.service';
 import AppController from './app.controller';
-
-console.log(`configuration: \n ${configuration.toString()}`);
-
-// console.log(join(__dirname, '../data/migrations/'));
 
 @Module({
   imports: [
