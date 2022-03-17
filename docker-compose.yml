@@ -58,35 +58,7 @@ services:
     ports:
       - "6379:6379"
 
-  # Api Gateway :
-  # api_gw:
-  #   build:
-  #     context: .
-  #     dockerfile: ./api-gateway/docker/ApiGW.Dockerfile
-  #   container_name: api_gw
-  #   working_dir: /var/www/api_gw
-  #   environment:
-  #     KAFKA_BROKERCONNECT: localhost:29092
-  #     KAFKA_PROTOCOL: http://
-  #     KAFKA_HOST: kafka
-  #     KAFKA_PORT: 29092
-  #     APP_HOST: app
-  #     REDIS_URL: redis://redis:6379
-  #     POSTGRES_HOST: postgresql_database
-  #     POSTGRES_PORT: 5432
-  #     POSTGRES_DB: productDb
-  #     POSTGRES_USER: admin
-  #     POSTGRES_PASSWORD: admin1234
-  #   volumes:
-  #     - ./:/var/www/api_gw:cached
-  #     - /var/www/api_gw/node_modules # anonymous volume for node_modules only
-  #   restart: always
-  #   ports:
-  #     - 3001:3001
-  #   links:
-  #     - kafka
-
-  # KAFKA :
+  # KAFKA QUEUE :
   kafka:
     image: obsidiandynamics/kafka
     restart: "no"
