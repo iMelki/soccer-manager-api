@@ -5,7 +5,7 @@ import {
   Controller, Get, Param, Query,
 } from '@nestjs/common';
 import {
-  ApiBearerAuth, ApiTags,
+  ApiBearerAuth, ApiParam, ApiTags,
 } from '@nestjs/swagger';
 import { PaginatedEntitiesInterface } from '@interfaces/paginatedEntity.interface';
 import MarketService from './market.service';
@@ -43,6 +43,7 @@ export default class MarketController {
     );
   }
 
+  @ApiParam({ name: 'id', type: String })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.marketService.findOne(+id);

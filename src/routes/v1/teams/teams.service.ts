@@ -7,7 +7,7 @@ import { Position } from '@v1/players/enums/position.enum';
 import PlayersService from '@v1/players/players.service';
 import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
 import CreateTeamDto from './dto/create-team.dto';
-import UpdateTeamDto from './dto/update-team.dto';
+// import UpdateTeamDto from './dto/update-team.dto';
 import TeamEntity from './schemas/team.entity';
 import TeamsRepository from './teams.repository';
 
@@ -97,11 +97,17 @@ export default class TeamsService {
     });
   }
 
-  update(id: number, data: UpdateTeamDto): Promise<UpdateResult> {
+  public async findOneIncludingPlayersById(id: number): Promise<TeamEntity | undefined> {
+    return this.teamsRepository.getByIdIncludingPlayers(id);
+  }
+
+  update(id: number, data: CreateTeamDto): Promise<UpdateResult> {
     return this.teamsRepository.updateById(id, data);
   }
 
   remove(id: number) {
     return `This action removes a #${id} team`;
   }
+
+  // public async getBudgetBy
 }

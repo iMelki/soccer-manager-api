@@ -40,6 +40,6 @@ export default class MarketService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} market`;
+    return this.marketRepository.remove(id);
   }
 }

@@ -9,19 +9,20 @@ import {
 } from '@nestjs/swagger';
 import JwtTokensDto from '@v1/auth/dto/jwt-tokens.dto';
 import JwtAccessGuard from '@guards/jwt-access.guard';
-import SellService from './sell.service';
-import SetPlayerForSaleRequest from './dto/player-for-sale-request.dto';
+import BuyService from './buy.service';
 import TransferEntity from '../entities/transfer.entity';
+import PlayerBuyDto from './dto/player-buy.dto';
+import AuthBearer from '@decorators/auth-bearer.decorator';
 
 @ApiTags('Market')
 @ApiBearerAuth()
 // @UseInterceptors(WrapResponseInterceptor)
 @ApiExtraModels(JwtTokensDto)
-@Controller('/sell')
-export default class SellController {
-  constructor(private readonly sellService: SellService) {}
+@Controller('/buy')
+export default class BuyController {
+  constructor(private readonly buyService: BuyService) {}
 
-  @ApiBody({ type: SetPlayerForSaleRequest })
+  @ApiBody({ type: PlayerBuyDto })
   @ApiOkResponse({
     schema: {
       type: 'object',
@@ -46,8 +47,12 @@ export default class SellController {
   // @Serialize(TeamResponseEntity)
   @Post()
   create(
-    @Body() playerSellDto: SetPlayerForSaleRequest,
+    @AuthBearer() token: string,
+    @Body() playerBuyDto: PlayerBuyDto,
   ) {
-    return this.sellService.sellPlayer(playerSellDto);
+    return this.buyService.buyPlayer({
+      buyerToken: token,
+      transferId: playerBuyDto.transferId,
+    });
   }
 }

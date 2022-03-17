@@ -15,7 +15,7 @@ export default class ConsumerService implements OnApplicationShutdown {
   private readonly consumers: Consumer[] = [];
 
   async consume(topic: ConsumerSubscribeTopic, config: ConsumerRunConfig) {
-    const consumer = this.kafka.consumer({ groupId: 'sell' });
+    const consumer = this.kafka.consumer({ groupId: topic?.topic.toString() });
     await consumer.connect();
     await consumer.subscribe(topic);
     await consumer.run(config);

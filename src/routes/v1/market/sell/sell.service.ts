@@ -33,18 +33,6 @@ export default class SellService implements OnModuleInit {
     );
   }
 
-  // async sellPlayer(playerSellDto: SetPlayerForSaleRequest) {
-  //   await this.producerService.produce({
-  //     topic: 'sell',
-  //     messages: [
-  //       {
-  //         value: 'Hello World',
-  //       },
-  //     ],
-  //   });
-  //   return `Hello World!\n ${playerSellDto}`;
-  // }
-
   async sellPlayer(playerSellRequest: SetPlayerForSaleRequest) {
     await this.producerService.produce({
       topic: 'sell',
