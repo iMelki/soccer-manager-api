@@ -22,4 +22,8 @@ export default class TransferEntity {
       @OneToOne(() => PlayerEntity)
       @JoinColumn()
       readonly player?: PlayerEntity | undefined;
+
+      public toString() {
+        return `Player #${this.id} for ${this.price} : /n ${this.player?.first} ${this.player?.last}`;
+      }
 }

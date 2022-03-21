@@ -21,6 +21,7 @@ services:
       MAILER_PASSWORD: NADZCMUfWG5ndjkh
       MAILER_FROM_EMAIL: melki@post.bgu.ac.il
       MAILER_HOST: smtp-relay.sendinblue.com
+      KAFKA_BROKERCONNECT: "kafka:29092"
       # POSTGRESQL_ROOT_USER: admin
       # POSTGRESQL_PASSWORD: admin1234
     volumes:
@@ -32,6 +33,11 @@ services:
     links:
       - postgresql_database
       - redis
+      - kafka
+    depends_on:
+      - postgresql_database
+      - redis
+      - "kafka"
 
   # Postgres :
   postgresql_database:
@@ -65,6 +71,7 @@ services:
     ports:
       - "2181:2181"
       - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
       KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"

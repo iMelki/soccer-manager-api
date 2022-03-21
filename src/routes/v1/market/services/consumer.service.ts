@@ -9,7 +9,9 @@ import {
 @Injectable()
 export default class ConsumerService implements OnApplicationShutdown {
   private readonly kafka = new Kafka({
-    brokers: [process.env.KAFKA_BROKERCONNECT || 'localhost:9092'],
+    brokers: [
+      process.env.KAFKA_BROKERCONNECT || 'localhost:9092',
+    ],
   });
 
   private readonly consumers: Consumer[] = [];
@@ -24,9 +26,9 @@ export default class ConsumerService implements OnApplicationShutdown {
 
   async onApplicationShutdown() {
     // eslint-disable-next-line no-restricted-syntax
-    // for (const consumer of this.consumers) {
-    //   // eslint-disable-next-line no-await-in-loop
-    //   await consumer.disconnect();
-    // }
+    for (const consumer of this.consumers) {
+      // eslint-disable-next-line no-await-in-loop
+      await consumer.disconnect();
+    }
   }
 }
