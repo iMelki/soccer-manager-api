@@ -27,75 +27,76 @@ export default class BuyService implements OnModuleInit {
       { topic: 'buy' },
       {
         eachMessage: async ({ message }) => {
-          // Deserialize Data:
-          const transferId = Number(message?.value?.toString());
-          console.log(`transferId = ${transferId}`);
-          const buyerToken = message?.key?.toString();
-          console.log(`buyerToken = ${buyerToken}`);
+          try {
+            // Deserialize Data:
+            const transferId = Number(message?.value?.toString());
+            const buyerToken = message?.key?.toString();
 
-          const decodedUser: DecodedUser | null = await this.authService.verifyToken(
-            buyerToken || '',
-            authConstants.jwt.secrets.accessToken,
-          );
+            const decodedUser: DecodedUser | null = await this.authService.verifyToken(
+              buyerToken || '',
+              authConstants.jwt.secrets.accessToken,
+            );
 
-          if (!decodedUser) {
-            throw new ForbiddenException('Incorrect token');
+            if (!decodedUser) {
+              throw new ForbiddenException('Incorrect token');
+              // console.log('Incorrect token');
+            }
+            const userId = decodedUser.id;
+            const userObj = await this.usersService.getVerifiedUserById(userId);
+            const team = userObj?.team;
+            // const userObj = await this.teamsService.(team);
+            const transferObj = await this.marketService.findOneIncludingDetails(Number(transferId));
+            if (!team?.budget || (transferObj?.price && transferObj?.price > team?.budget)) {
+              throw new ForbiddenException('Inssuficient budget!');
+              // console.log('Inssuficient budget!');
+            }
+
+            const player = transferObj?.player;
+            const sellingTeam = player?.team;
+            const val = player?.value || 0;
+            const newVal = Math.floor((1.1 + 0.9 * Math.random()) * val);
+            await this.playerService.update(player?.id || 0, {
+              ...player,
+              value: newVal,
+              team,
+            });
+
+            const origSellerValue = sellingTeam?.value || 0;
+            const origSellerBudget = sellingTeam?.budget || 0;
+            await this.teamsService.update(sellingTeam?.id || 0, {
+              // ...sellingTeam,
+              name: sellingTeam?.name,
+              country: sellingTeam?.country,
+              value: origSellerValue - val,
+              budget: origSellerBudget + (transferObj?.price || 0),
+              // players: sellingTeam?.players?.filter((p) => p.id !== player?.id),
+            });
+
+            this.marketService.remove(transferId);
+
+            const origBuyerValue = team?.value || 0;
+            const origBuyerBudget = team?.budget || 0;
+
+            let playersArr = team?.players;
+            if (player) {
+              if (playersArr) {
+                playersArr.push(player);
+              } else {
+                playersArr = [player];
+              }
+            }
+
+            this.teamsService.update(team?.id || 0, {
+              // ...team,
+              name: team?.name,
+              country: team?.country,
+              value: origBuyerValue + newVal,
+              budget: origBuyerBudget - (transferObj?.price || 0),
+              // players: playersArr,
+            });
+          } catch (err: any) {
+            console.log(err?.message);
           }
-          const userId = decodedUser.id;
-          console.log(`userId = ${userId}`);
-          const userObj = await this.usersService.getVerifiedUserById(userId);
-          const team = userObj?.team;
-          console.log(`team.id = ${team?.id}`);
-          const transferObj = await this.marketService.findOneIncludingDetails(Number(transferId));
-          console.log(`transferObj.price = ${transferObj?.price}`);
-          if (!team?.budget || (transferObj?.price && transferObj?.price > team?.budget)) {
-            throw new ForbiddenException('Inssuficient budget!');
-          }
-          console.log('ENOUGH BUDGET  :) ');
-
-          const player = transferObj?.player;
-          const sellingTeam = player?.team;
-          const val = player?.value || 0;
-          await this.playerService.update(player?.id || 0, {
-            ...player,
-            value: Math.floor((1.1 + 0.9 * Math.random()) * val),
-            team,
-          });
-          console.log('PLAYER UPDATED !!! ');
-          const origSellerValue = sellingTeam?.value || 0;
-          const origSellerBudget = sellingTeam?.budget || 0;
-          await this.teamsService.update(sellingTeam?.id || 0, {
-            // ...sellingTeam,
-            name: sellingTeam?.name,
-            country: sellingTeam?.country,
-            value: origSellerValue - val,
-            budget: origSellerBudget + (transferObj?.price || 0),
-            // players: sellingTeam?.players?.filter((p) => p.id !== player?.id),
-          });
-          console.log('SELLING TEAM UPDATED !!! ');
-
-          this.marketService.remove(transferId);
-          console.log('removed player from Transfer List  :) ');
-
-          // const origBuyerValue = team?.value || 0;
-          // const origBuyerBudget = team?.budget || 0;
-
-          // let playersArr = team?.players;
-          // if (player) {
-          //   if (playersArr) {
-          //     playersArr.push(player);
-          //   } else {
-          //     playersArr = [player];
-          //   }
-          // }
-
-          // this.teamsService.update(team?.id || 0, {
-          //   ...team,
-          //   value: origBuyerValue + val,
-          //   budget: origBuyerBudget - (transferObj?.price || 0),
-          //   // players: playersArr,
-          // });
-          console.log('BUYING TEAM UPDATED !!! ');
         },
       },
     );

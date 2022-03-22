@@ -8,7 +8,7 @@ import AppService from './app.service';
 export default class AppController {
   constructor(private readonly appService: AppService) {}
 
-  @ApiOkResponse({ description: 'Returns you Hello world!' })
+  @ApiOkResponse({ description: 'Returns Hello world!' })
   @Get()
   sayHello(): string {
     return this.appService.getHello();

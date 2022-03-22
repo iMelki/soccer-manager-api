@@ -1,9 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+import PlayersService from '@v1/players/players.service';
 import SetPlayerForSaleRequest from './dto/player-for-sale-request.dto';
 import ProducerService from '../services/producer.service';
 import ConsumerService from '../services/consumer.service';
 import MarketRepository from '../market.repository';
-import PlayersService from '@v1/players/players.service';
 
 @Injectable()
 export default class SellService implements OnModuleInit {
@@ -19,15 +19,19 @@ export default class SellService implements OnModuleInit {
       { topic: 'sell' },
       {
         eachMessage: async ({ message }) => {
-          // Deserialize Data:
-          const price = message?.value;
-          const playerId = message?.key;
-          const player = await this.playerService.findOne(Number(playerId));
-          // Add TransferEntity into Transfers table:
-          this.marketRepository.create({
-            player: player,
-            price: Number(price?.toString()),
-          });
+          try {
+            // Deserialize Data:
+            const price = message?.value;
+            const playerId = message?.key;
+            const player = await this.playerService.findOne(Number(playerId));
+            // Add TransferEntity into Transfers table:
+            this.marketRepository.create({
+              player,
+              price: Number(price?.toString()),
+            });
+          } catch (err: any) {
+            console.log(err?.message);
+          }
         },
       },
     );

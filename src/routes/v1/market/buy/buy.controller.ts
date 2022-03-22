@@ -9,10 +9,10 @@ import {
 } from '@nestjs/swagger';
 import JwtTokensDto from '@v1/auth/dto/jwt-tokens.dto';
 import JwtAccessGuard from '@guards/jwt-access.guard';
+import AuthBearer from '@decorators/auth-bearer.decorator';
 import BuyService from './buy.service';
 import TransferEntity from '../entities/transfer.entity';
 import PlayerBuyDto from './dto/player-buy.dto';
-import AuthBearer from '@decorators/auth-bearer.decorator';
 
 @ApiTags('Market')
 @ApiBearerAuth()

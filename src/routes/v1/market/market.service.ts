@@ -31,7 +31,7 @@ export default class MarketService {
 
   public async findOneIncludingDetails(id: number): Promise<TransferEntity | undefined> {
     return this.marketRepository.getById(id, {
-      relations: ['player'],
+      relations: ['player', 'player.team'],
     });
   }
 

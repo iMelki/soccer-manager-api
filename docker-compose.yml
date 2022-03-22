@@ -21,6 +21,7 @@ services:
       MAILER_PASSWORD: NADZCMUfWG5ndjkh
       MAILER_FROM_EMAIL: melki@post.bgu.ac.il
       MAILER_HOST: smtp-relay.sendinblue.com
+      KAFKA_BROKERCONNECT: "kafka:29092"
       # POSTGRESQL_ROOT_USER: admin
       # POSTGRESQL_PASSWORD: admin1234
     volumes:
@@ -32,6 +33,11 @@ services:
     links:
       - postgresql_database
       - redis
+      - kafka
+    depends_on:
+      - postgresql_database
+      - redis
+      - "kafka"
 
   # Postgres :
   postgresql_database:
@@ -58,41 +64,14 @@ services:
     ports:
       - "6379:6379"
 
-  # Api Gateway :
-  # api_gw:
-  #   build:
-  #     context: .
-  #     dockerfile: ./api-gateway/docker/ApiGW.Dockerfile
-  #   container_name: api_gw
-  #   working_dir: /var/www/api_gw
-  #   environment:
-  #     KAFKA_BROKERCONNECT: localhost:29092
-  #     KAFKA_PROTOCOL: http://
-  #     KAFKA_HOST: kafka
-  #     KAFKA_PORT: 29092
-  #     APP_HOST: app
-  #     REDIS_URL: redis://redis:6379
-  #     POSTGRES_HOST: postgresql_database
-  #     POSTGRES_PORT: 5432
-  #     POSTGRES_DB: productDb
-  #     POSTGRES_USER: admin
-  #     POSTGRES_PASSWORD: admin1234
-  #   volumes:
-  #     - ./:/var/www/api_gw:cached
-  #     - /var/www/api_gw/node_modules # anonymous volume for node_modules only
-  #   restart: always
-  #   ports:
-  #     - 3001:3001
-  #   links:
-  #     - kafka
-
-  # KAFKA :
+  # KAFKA QUEUE :
   kafka:
     image: obsidiandynamics/kafka
     restart: "no"
     ports:
       - "2181:2181"
       - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_LISTENERS: "INTERNAL://:29092,EXTERNAL://:9092"
       KAFKA_ADVERTISED_LISTENERS: "INTERNAL://kafka:29092,EXTERNAL://localhost:9092"
